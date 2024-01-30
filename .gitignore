@@ -1,0 +1,5 @@
+# ignore these items
+freeglut/
+glew-2.1.0/
+glm/
+.vs/
