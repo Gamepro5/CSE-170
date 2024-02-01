@@ -77,31 +77,29 @@ float axis_colors[] = {
 	0.0f, 0.0f, 1.0f, 1.0f
 };
 
-GLuint axis_DAO;
-GLuint axis_DBO[2];
+GLuint draw_VAO;
+GLuint draw_VBO[2];
 
 float draw_vertices[] = {
-	//x axis
-	-1.0f,  0.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	//y axis
-	0.0f, -1.0f,  0.0f, 1.0f,
-	0.0f,  1.0f,  0.0f, 1.0f,
-	//z axis
-	0.0f,  0.0f, -1.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f
+	-0.5f,  -0.5f,  -0.5f, 1.0f,
+	0.5f,  0.5f,  -0.5f, 1.0f,
+	0.5f,  -0.5f,  -0.5f, 1.0f,
+
+	0.5f,  0.5f,  -0.5f, 1.0f,
+	-0.5f,  -0.5f,  -0.5f, 1.0f,
+	-0.5f,  0.5f,  -0.5f, 1.0f
+	
+	
 };
 
 float draw_colors[] = {
-	//x axis
-	1.0f, 0.0f, 0.0f, 1.0f,
-	1.0f, 0.0f, 0.0f, 1.0f,
-	//y axis
-	0.0f, 1.0f, 0.0f, 1.0f,
-	0.0f, 1.0f, 0.0f, 1.0f,
-	//z axis
-	0.0f, 0.0f, 1.0f, 1.0f,
-	0.0f, 0.0f, 1.0f, 1.0f
+	1.0f,  0.0f,  0.0f, 1.0f,
+	0.0f,  1.0f,  0.0f, 1.0f,
+	0.0f,  0.0f,  1.0f, 1.0f,
+
+	0.0f,  1.0f,  0.0f, 1.0f,
+	1.0f,  0.0f,  0.0f, 1.0f,
+	0.0f,  0.0f,  1.0f, 1.0f
 };
 
 
@@ -187,19 +185,19 @@ void CreateAxisBuffers( void )
 //
 void CreateDrawBuffers(void)
 {
-	glGenVertexArrays(1, &axis_DAO); //generate 1 new VAO, its ID is returned in axis_VAO
-	glBindVertexArray(axis_DAO); //bind the VAO so the subsequent commands modify it
+	glGenVertexArrays(1, &draw_VAO); //generate 1 new VAO, its ID is returned in axis_VAO
+	glBindVertexArray(draw_VAO); //bind the VAO so the subsequent commands modify it
 
-	glGenBuffers(2, &axis_DBO[0]); //generate 2 buffers for data, their IDs are returned to the axis_VBO array
+	glGenBuffers(2, &draw_VBO[0]); //generate 2 buffers for data, their IDs are returned to the axis_VBO array
 
 	// first buffer: vertex coordinates
-	glBindBuffer(GL_ARRAY_BUFFER, axis_DBO[0]); //bind the first buffer using its ID
+	glBindBuffer(GL_ARRAY_BUFFER, draw_VBO[0]); //bind the first buffer using its ID
 	glBufferData(GL_ARRAY_BUFFER, sizeof(draw_vertices), draw_vertices, GL_STATIC_DRAW); //send coordinate array to the GPU
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0); //let GPU know this is attribute 0, made up of 4 floats
 	glEnableVertexAttribArray(0);
 
 	// second buffer: colors
-	glBindBuffer(GL_ARRAY_BUFFER, axis_DBO[1]); //bind the second buffer using its ID
+	glBindBuffer(GL_ARRAY_BUFFER, draw_VBO[1]); //bind the second buffer using its ID
 	glBufferData(GL_ARRAY_BUFFER, sizeof(draw_colors), draw_colors, GL_STATIC_DRAW); //send color array to the GPU
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0); //let GPU know this is attribute 1, made up of 4 floats
 	glEnableVertexAttribArray(1);
@@ -367,7 +365,8 @@ void display_func( void )
 
 	//
 	// Bind and draw your object here CODE HERE CODE HERE CODE HERE
-	
+	glBindVertexArray(draw_VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6); // 6 = number of vertices in the object
 
 	//
 
@@ -403,7 +402,7 @@ void init( void )
 
 	//
 	// Consider calling a function to create your object here
-	//
+	CreateDrawBuffers();
 
 	std::cout << "Finished initializing...\n\n";
 }

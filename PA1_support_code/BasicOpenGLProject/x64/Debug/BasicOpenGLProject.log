@@ -1,2 +1,1 @@
-﻿  main.cpp
-  BasicOpenGLProject.vcxproj -> C:\Users\gamep\Documents\GitHub\CSE-170\PA1_support_code\x64\Debug\OpenGLProject.exe
+﻿LINK : fatal error LNK1168: cannot open C:\Users\gamep\Documents\GitHub\CSE-170\PA1_support_code\x64\Debug\OpenGLProject.exe for writing
