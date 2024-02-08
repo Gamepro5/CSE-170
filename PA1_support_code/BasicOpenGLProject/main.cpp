@@ -6,6 +6,9 @@
 #include <iostream>
 #include "shader.h"
 #include "shaderprogram.h"
+#include <vector>
+#include "Vector.h"
+#include "Entity.h"
 
 /*=================================================================================================
 	DOMAIN
@@ -80,7 +83,11 @@ float axis_colors[] = {
 GLuint draw_VAO;
 GLuint draw_VBO[2];
 
-float draw_vertices[] = {
+std::vector<float> draw_verticies{};
+
+std::vector<float> draw_colors{};
+
+Entity* J = new Entity({
 	//1
 	-9.0f,  3.0f,  0.0f, 1.0f,
 	-9.0f,  1.0f,  0.0f, 1.0f,
@@ -105,6 +112,34 @@ float draw_vertices[] = {
 	-4.0f,  7.0f,  0.0f, 1.0f,
 	-8.0f,  7.0f,  0.0f, 1.0f,
 	-4.0f,  6.0f,  0.0f, 1.0f,
+	},
+	{
+	1.0f, 0.0f, 0.0f, 1.0f,
+	0.0f, 1.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 1.0f, 1.0f,
+
+	0.0f, 1.0f, 0.0f, 1.0f,
+	1.0f, 0.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 1.0f, 1.0f,
+
+	1.0f, 0.0f, 0.0f, 1.0f,
+	0.0f, 1.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 1.0f, 1.0f,
+
+	0.0f, 1.0f, 0.0f, 1.0f,
+	1.0f, 0.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 1.0f, 1.0f,
+
+	1.0f, 0.0f, 0.0f, 1.0f,
+	0.0f, 1.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 1.0f, 1.0f,
+
+	0.0f, 1.0f, 0.0f, 1.0f,
+	1.0f, 0.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 1.0f, 1.0f,
+	});
+
+Entity* U = new Entity({
 	//7
 	-3.0f,  3.0f,  0.0f, 1.0f,
 	-4.0f,  3.0f,  0.0f, 1.0f,
@@ -117,6 +152,23 @@ float draw_vertices[] = {
 	1.5f,  3.0f,  0.0f, 1.0f,
 	0.5f,  3.0f,  0.0f, 1.0f,
 	0.0f,  1.0f,  0.0f, 1.0f,
+	}, {
+	1.0f,  0.0f,  0.0f, 1.0f,
+	0.0f,  1.0f,  0.0f, 1.0f,
+	0.0f,  0.0f,  1.0f, 1.0f,
+
+	1.0f,  0.0f,  0.0f, 1.0f,
+	0.0f,  1.0f,  0.0f, 1.0f,
+	0.0f,  0.0f,  1.0f, 1.0f,
+
+	1.0f,  0.0f,  0.0f, 1.0f,
+	0.0f,  1.0f,  0.0f, 1.0f,
+	0.0f,  0.0f,  1.0f, 1.0f,
+	});
+
+
+
+Entity* L = new Entity({
 	//10
 	3.0f,  7.0f,  0.0f, 1.0f,
 	3.0f,  0.0f,  0.0f, 1.0f,
@@ -133,6 +185,26 @@ float draw_vertices[] = {
 	6.0f,  1.0f,  0.0f, 1.0f,
 	4.0f,  1.0f,  0.0f, 1.0f,
 	6.0f,  0.0f,  0.0f, 1.0f,
+	}, {
+	1.0f,  0.0f,  0.0f, 1.0f,
+	0.0f,  1.0f,  0.0f, 1.0f,
+	0.0f,  0.0f,  1.0f, 1.0f,
+
+	1.0f,  0.0f,  0.0f, 1.0f,
+	0.0f,  1.0f,  0.0f, 1.0f,
+	0.0f,  0.0f,  1.0f, 1.0f,
+
+	1.0f,  0.0f,  0.0f, 1.0f,
+	0.0f,  1.0f,  0.0f, 1.0f,
+	0.0f,  0.0f,  1.0f, 1.0f,
+
+	1.0f,  0.0f,  0.0f, 1.0f,
+	0.0f,  1.0f,  0.0f, 1.0f,
+	0.0f,  0.0f,  1.0f, 1.0f,
+	}
+	);
+
+Entity* I = new Entity({
 	//14
 	8.0f,  4.0f,  0.0f, 1.0f,
 	8.0f,  0.0f,  0.0f, 1.0f,
@@ -145,74 +217,24 @@ float draw_vertices[] = {
 	8.5f,  6.0f,  0.0f, 1.0f,
 	8.0f,  5.0f,  0.0f, 1.0f,
 	9.0f,  5.0f,  0.0f, 1.0f,
-	
-};
-
-float draw_colors[] = {
+	}, {
 	1.0f,  0.0f,  0.0f, 1.0f,
 	0.0f,  1.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
-
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
 	0.0f,  0.0f,  1.0f, 1.0f,
 
 	1.0f,  0.0f,  0.0f, 1.0f,
 	0.0f,  1.0f,  0.0f, 1.0f,
 	0.0f,  0.0f,  1.0f, 1.0f,
 
-	0.0f,  1.0f,  0.0f, 1.0f,
 	1.0f,  0.0f,  0.0f, 1.0f,
+	0.0f,  1.0f,  0.0f, 1.0f,
 	0.0f,  0.0f,  1.0f, 1.0f,
+	});
 
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  1.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
+std::vector<Entity*> Entities{ J, U, L, I };
 
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
 
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
 
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
-
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
-
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
-
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
-
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
-
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
-
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
-
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
-
-	0.0f,  1.0f,  0.0f, 1.0f,
-	1.0f,  0.0f,  0.0f, 1.0f,
-	0.0f,  0.0f,  1.0f, 1.0f,
-};
 
 
 /*=================================================================================================
@@ -292,9 +314,6 @@ void CreateAxisBuffers( void )
 	//      have to do a calculation such as sizeof(v[0]) * v.size().
 }
 
-//
-//void CreateMyOwnObject( void ) ...
-//
 void CreateDrawBuffers(void)
 {
 	glGenVertexArrays(1, &draw_VAO); //generate 1 new VAO, its ID is returned in axis_VAO
@@ -304,13 +323,13 @@ void CreateDrawBuffers(void)
 
 	// first buffer: vertex coordinates
 	glBindBuffer(GL_ARRAY_BUFFER, draw_VBO[0]); //bind the first buffer using its ID
-	glBufferData(GL_ARRAY_BUFFER, sizeof(draw_vertices), draw_vertices, GL_STATIC_DRAW); //send coordinate array to the GPU
+	glBufferData(GL_ARRAY_BUFFER, sizeof(draw_verticies[0]) * draw_verticies.size(), &draw_verticies[0], GL_STATIC_DRAW); //send coordinate array to the GPU
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0); //let GPU know this is attribute 0, made up of 4 floats
 	glEnableVertexAttribArray(0);
 
 	// second buffer: colors
 	glBindBuffer(GL_ARRAY_BUFFER, draw_VBO[1]); //bind the second buffer using its ID
-	glBufferData(GL_ARRAY_BUFFER, sizeof(draw_colors), draw_colors, GL_STATIC_DRAW); //send color array to the GPU
+	glBufferData(GL_ARRAY_BUFFER, sizeof(draw_colors[0]) * draw_colors.size(), &draw_colors[0], GL_STATIC_DRAW); //send color array to the GPU
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0); //let GPU know this is attribute 1, made up of 4 floats
 	glEnableVertexAttribArray(1);
 
@@ -475,10 +494,21 @@ void display_func( void )
 	glBindVertexArray( axis_VAO );
 	glDrawArrays( GL_LINES, 0, 6 ); // 6 = number of vertices in the object
 
-	//
+	
+	draw_verticies.clear();
+	draw_colors.clear();
+	for (int i = 0; i < Entities.size(); i++) {
+		for (int j = 0; j < Entities[i]->mesh.size(); j++) {
+			draw_verticies.push_back(Entities[i]->mesh[j]);
+			draw_colors.push_back(Entities[i]->color[j]);
+		};
+	};
+	
+	CreateDrawBuffers();
+
 	// Bind and draw your object here CODE HERE CODE HERE CODE HERE
 	glBindVertexArray(draw_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 48); // 6 = number of vertices in the object
+	glDrawArrays(GL_TRIANGLES, 0, draw_verticies.size());
 
 	//
 
@@ -514,6 +544,8 @@ void init( void )
 
 	//
 	// Consider calling a function to create your object here
+	
+	// PUTTING DATA FROM ENTITY OBJECTS INTO THE DRAW AND COLOR VECTORS TO BE PASSED INTO THE GPU.
 	CreateDrawBuffers();
 
 	std::cout << "Finished initializing...\n\n";

@@ -145,8 +145,10 @@
     <ClCompile Include="shaderprogram.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shaderprogram.h" />
+    <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\persp.frag" />
