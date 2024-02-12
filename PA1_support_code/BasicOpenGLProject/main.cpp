@@ -495,22 +495,50 @@ void display_func( void )
 	glDrawArrays( GL_LINES, 0, 6 ); // 6 = number of vertices in the object
 
 	
-	draw_verticies.clear();
-	draw_colors.clear();
 	for (int i = 0; i < Entities.size(); i++) {
+		draw_verticies.clear();
+		draw_colors.clear();
 		for (int j = 0; j < Entities[i]->mesh.size(); j++) {
 			draw_verticies.push_back(Entities[i]->mesh[j]);
 			draw_colors.push_back(Entities[i]->color[j]);
 		};
+		CreateDrawBuffers();
+		glm::mat4 rotationMatrixX (
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f }
+		);
+		glm::mat4 rotationMatrixY (
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f }
+		);
+		glm::mat4 rotationMatrixZ (
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f }
+		);
+		glm::mat4 scaleMatrix (
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f }
+		);
+		glm::mat4 translationMatrix (
+			{ 1.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 1.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 1.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 1.0f }
+		);
+		
+		//PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(translationMatrix), 4, GL_FALSE, 1);
+		glBindVertexArray(draw_VAO);
+		glDrawArrays(GL_TRIANGLES, 0, draw_verticies.size());
 	};
-	
-	CreateDrawBuffers();
 
-	// Bind and draw your object here CODE HERE CODE HERE CODE HERE
-	glBindVertexArray(draw_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, draw_verticies.size());
-
-	//
 
 	// Unbind when done
 	glBindVertexArray( 0 );
