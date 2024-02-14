@@ -3,7 +3,10 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#define _USE_MATH_DEFINES
 #include <iostream>
+#include <cmath>
+#include <math.h>
 #include "shader.h"
 #include "shaderprogram.h"
 #include <vector>
@@ -31,7 +34,7 @@ bool mouse_states[8];
 
 // Other parameters
 bool draw_wireframe = false;
-
+float toRadians = M_PI / 180.0;
 /*=================================================================================================
 	SHADERS & TRANSFORMATIONS
 =================================================================================================*/
@@ -165,7 +168,6 @@ Entity* U = new Entity({
 	0.0f,  1.0f,  0.0f, 1.0f,
 	0.0f,  0.0f,  1.0f, 1.0f,
 	});
-
 
 
 Entity* L = new Entity({
@@ -504,37 +506,38 @@ void display_func( void )
 		};
 		CreateDrawBuffers();
 		glm::mat4 rotationMatrixX (
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f }
+			{ 1.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, std::cos(Entities[i]->rotation.x), -std::sin(Entities[i]->rotation.x), 0.0f },
+			{ 0.0f, std::sin(Entities[i]->rotation.x), std::cos(Entities[i]->rotation.x), 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 1.0f }
 		);
 		glm::mat4 rotationMatrixY (
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f }
+			{ std::cos(Entities[i]->rotation.y), 0.0f, std::sin(Entities[i]->rotation.y), 0.0f },
+			{ 0.0f, 1.0f, 0.0f, 0.0f },
+			{ -std::sin(Entities[i]->rotation.y), 0.0f, std::cos(Entities[i]->rotation.y), 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 1.0f }
 		);
 		glm::mat4 rotationMatrixZ (
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f }
-		);
-		glm::mat4 scaleMatrix (
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f }
-		);
-		glm::mat4 translationMatrix (
-			{ 1.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 1.0f, 0.0f, 0.0f },
+			{ std::cos(Entities[i]->rotation.z), -std::sin(Entities[i]->rotation.z), 0.0f, 0.0f},
+			{ std::sin(Entities[i]->rotation.z), std::cos(Entities[i]->rotation.z), 0.0f, 0.0f },
 			{ 0.0f, 0.0f, 1.0f, 0.0f },
 			{ 0.0f, 0.0f, 0.0f, 1.0f }
 		);
+		glm::mat4 scaleMatrix (
+			{ Entities[i]->scale.x, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, Entities[i]->scale.y, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, Entities[i]->scale.z, 0.0f },
+			{ 0.0f, 0.0f, 0.0f, 1.0f }
+		);
+		glm::mat4 translationMatrix (
+			{ 1.0f, 0.0f, 0.0f, Entities[i]->position.x },
+			{ 0.0f, 1.0f, 0.0f, Entities[i]->position.y },
+			{ 0.0f, 0.0f, 1.0f, Entities[i]->position.z },
+			{ 0.0f, 0.0f, 0.0f, 1.0f }
+		);
 		
-		//PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(translationMatrix), 4, GL_FALSE, 1);
+		PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(rotationMatrixZ * rotationMatrixY * rotationMatrixX * scaleMatrix * translationMatrix * PerspModelMatrix), 4, GL_FALSE, 1);
+		//PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(scaleMatrix * PerspModelMatrix), 4, GL_FALSE, 1);
 		glBindVertexArray(draw_VAO);
 		glDrawArrays(GL_TRIANGLES, 0, draw_verticies.size());
 	};
@@ -572,7 +575,11 @@ void init( void )
 
 	//
 	// Consider calling a function to create your object here
-	
+	//U->rotation.y = 45 * toRadians;
+	//U->position.y = 2;
+	U->scale.y = 2;
+	U->scale.x = 1;
+	U->scale.z = 1;
 	// PUTTING DATA FROM ENTITY OBJECTS INTO THE DRAW AND COLOR VECTORS TO BE PASSED INTO THE GPU.
 	CreateDrawBuffers();
 

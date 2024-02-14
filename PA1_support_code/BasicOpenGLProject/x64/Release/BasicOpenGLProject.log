@@ -1,8 +1,9 @@
 ﻿  main.cpp
-C:\Users\gamep\Documents\GitHub\CSE-170\PA1_support_code\BasicOpenGLProject\main.cpp(539,52): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\gamep\Documents\GitHub\CSE-170\PA1_support_code\BasicOpenGLProject\main.cpp(37,17): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\gamep\Documents\GitHub\CSE-170\PA1_support_code\BasicOpenGLProject\main.cpp(542,52): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
   Generating code
-  2 of 406 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  17 of 409 functions ( 4.2%) were compiled, the rest were copied from previous compilation.
+    3 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   BasicOpenGLProject.vcxproj -> C:\Users\gamep\Documents\GitHub\CSE-170\PA1_support_code\x64\Release\OpenGLProject.exe
