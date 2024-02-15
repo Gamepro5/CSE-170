@@ -383,6 +383,39 @@ void keyboard_func( unsigned char key, int x, int y )
 				std::cout << "Wireframes off.\n";
 			break;
 		}
+		case 'j':
+		{
+			J->scale.x = 2;
+			J->scale.y = 2;
+			J->scale.z = 2;
+			break;
+		}
+		case 'u':
+		{
+			U->scale.x = 2;
+			U->scale.y = 2;
+			U->scale.z = 2;
+			break;
+		}
+		case 'l':
+		{
+			L->scale.x = 2;
+			L->scale.y = 2;
+			L->scale.z = 2;
+			break;
+		}
+		case 'i':
+		{
+			I->scale.x = 2;
+			I->scale.y = 2;
+			I->scale.z = 2;
+			break;
+		}
+		case '?':
+		{
+			std::cout << "Press J, U, L, or I on your keyboard to make that letter grow!" << std::endl;
+			break;
+		}
 
 		// Exit on escape key press
 		case '\x1B':
@@ -396,6 +429,39 @@ void keyboard_func( unsigned char key, int x, int y )
 void key_released( unsigned char key, int x, int y )
 {
 	key_states[ key ] = false;
+
+	switch (key)
+	{
+	
+	case 'j':
+	{
+		J->scale.x = 1;
+		J->scale.y = 1;
+		J->scale.z = 1;
+		break;
+	}
+	case 'u':
+	{
+		U->scale.x = 1;
+		U->scale.y = 1;
+		U->scale.z = 1;
+		break;
+	}
+	case 'l':
+	{
+		L->scale.x = 1;
+		L->scale.y = 1;
+		L->scale.z = 1;
+		break;
+	}
+	case 'i':
+	{
+		I->scale.x = 1;
+		I->scale.y = 1;
+		I->scale.z = 1;
+		break;
+	}
+	}
 }
 
 void key_special_pressed( int key, int x, int y )
@@ -497,7 +563,7 @@ void display_func( void )
 	glDrawArrays( GL_LINES, 0, 6 ); // 6 = number of vertices in the object
 
 	
-	for (int i = 0; i < Entities.size(); i++) {
+	for (int i = 0; i < Entities.size(); i++) { //render each entity individually, so a seperate transformation can be applied to it.
 		draw_verticies.clear();
 		draw_colors.clear();
 		for (int j = 0; j < Entities[i]->mesh.size(); j++) {
@@ -535,9 +601,9 @@ void display_func( void )
 			{ 0.0f, 0.0f, 1.0f, Entities[i]->position.z },
 			{ 0.0f, 0.0f, 0.0f, 1.0f }
 		);
-		
-		PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(rotationMatrixZ * rotationMatrixY * rotationMatrixX * scaleMatrix * translationMatrix * PerspModelMatrix), 4, GL_FALSE, 1);
-		//PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(scaleMatrix * PerspModelMatrix), 4, GL_FALSE, 1);
+		//apply transformation shader
+		PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(PerspModelMatrix * scaleMatrix * translationMatrix * rotationMatrixZ * rotationMatrixY * rotationMatrixX), 4, GL_FALSE, 1);
+		//draw it
 		glBindVertexArray(draw_VAO);
 		glDrawArrays(GL_TRIANGLES, 0, draw_verticies.size());
 	};
@@ -577,9 +643,6 @@ void init( void )
 	// Consider calling a function to create your object here
 	//U->rotation.y = 45 * toRadians;
 	//U->position.y = 2;
-	U->scale.y = 2;
-	U->scale.x = 1;
-	U->scale.z = 1;
 	// PUTTING DATA FROM ENTITY OBJECTS INTO THE DRAW AND COLOR VECTORS TO BE PASSED INTO THE GPU.
 	CreateDrawBuffers();
 
