@@ -16,7 +16,6 @@ public:
     float vertexCount = 500;
     std::vector<Triangle> triangles;
     std::vector<Vector> verticies;
-    std::vector<float> indices;
     std::vector<float> normals;
     int slices = 8;
     int loops = 20;
@@ -57,7 +56,6 @@ public:
         color.clear();
         triangles.clear();
         verticies.clear();
-        indices.clear();
         normals.clear();
        
         std::vector<std::vector<Vector>> rings;
