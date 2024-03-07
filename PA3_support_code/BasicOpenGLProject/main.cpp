@@ -91,6 +91,8 @@ std::vector<float> draw_verticies{};
 
 std::vector<float> draw_colors{};
 
+std::vector<float> draw_normals{};
+
 Torus* MyTorus = new Torus();
 
 
@@ -141,6 +143,7 @@ void CreateShaders( void )
 	// Renders using perspective projection
 	PerspectiveShader.Create( "./shaders/persp.vert", "./shaders/persp.frag" );
 
+	PerspectiveShader.Create("./shaders/persplight.vert", "./shaders/persplight.frag");
 	//
 	// Additional shaders would be defined here
 	//
@@ -195,6 +198,12 @@ void CreateDrawBuffers(void)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(draw_colors[0]) * draw_colors.size(), &draw_colors[0], GL_STATIC_DRAW); //send color array to the GPU
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0); //let GPU know this is attribute 1, made up of 4 floats
 	glEnableVertexAttribArray(1);
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, draw_VBO[2]); //bind the second buffer using its ID
+	glBufferData(GL_ARRAY_BUFFER, sizeof(draw_normals[0]) * draw_normals.size(), &draw_normals[0], GL_STATIC_DRAW); //send color array to the GPU
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0); //let GPU know this is attribute 1, made up of 4 floats
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0); //unbind when done
 
@@ -412,9 +421,11 @@ void display_func( void )
 	for (int i = 0; i < Tori.size(); i++) { //render each entity individually, so a seperate transformation can be applied to it.
 		draw_verticies.clear();
 		draw_colors.clear();
+		draw_normals.clear();
 		for (int j = 0; j < Tori[i]->mesh.size(); j++) {
 			draw_verticies.push_back(Tori[i]->mesh[j]);
 			draw_colors.push_back(Tori[i]->color[j]);
+			draw_normals.push_back(Tori[i]->normals[j]);
 		};
 		CreateDrawBuffers();
 		glm::mat4 rotationMatrixX (
@@ -473,7 +484,6 @@ void init( void )
 	std::cout << "Renderer:       " << glGetString( GL_RENDERER ) << "\n";
 	std::cout << "OpenGL Version: " << glGetString( GL_VERSION  ) << "\n";
 	std::cout << "GLSL Version:   " << glGetString( GL_SHADING_LANGUAGE_VERSION ) << "\n\n";
-
 	// Set OpenGL settings
 	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f ); // background color
 	glEnable( GL_DEPTH_TEST ); // enable depth test
@@ -500,6 +510,7 @@ void init( void )
 
 int main( int argc, char** argv )
 {
+	
 	// Create and initialize the OpenGL context
 	glutInit( &argc, argv );
 

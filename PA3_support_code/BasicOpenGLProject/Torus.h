@@ -10,6 +10,14 @@
 
 
 class Torus : public Entity {
+private:
+
+    Vector calculateNormal(Vector p1, Vector p2, Vector p3) {
+        Vector U = p2 - p1;
+        Vector V = p3 - p1;
+        Vector result = Vector((U.y * V.z) - (U.z * V.y), (U.z * V.x) - (U.x * V.z), (U.x * V.y) - (U.y * V.x));
+        return result;
+    };
 public:
     float radius = 2;
     float inner_radius = 0.5;
@@ -114,6 +122,20 @@ public:
             color.push_back(0.0);
             color.push_back(0.0);
             color.push_back(1.0);
+
+            Vector normal = calculateNormal(triangles[i].x, triangles[i].y, triangles[i].z);
+            normals.push_back(normal.x);
+            normals.push_back(normal.y);
+            normals.push_back(normal.z);
+            normals.push_back(1.0f);
+            normals.push_back(normal.x);
+            normals.push_back(normal.y);
+            normals.push_back(normal.z);
+            normals.push_back(1.0f);
+            normals.push_back(normal.x);
+            normals.push_back(normal.y);
+            normals.push_back(normal.z);
+            normals.push_back(1.0f);
         }
         
     }
