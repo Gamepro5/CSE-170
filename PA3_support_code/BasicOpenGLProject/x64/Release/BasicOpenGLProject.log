@@ -1,28 +1,28 @@
 ﻿  main.cpp
-C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(48,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(53,1): warning C4305: '+=': truncation from 'double' to 'float'
   (compiling source file 'main.cpp')
   
-C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(52,1): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(57,1): warning C4305: '-=': truncation from 'double' to 'float'
   (compiling source file 'main.cpp')
   
-C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(56,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(61,1): warning C4305: '+=': truncation from 'double' to 'float'
   (compiling source file 'main.cpp')
   
-C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(60,1): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(65,1): warning C4305: '-=': truncation from 'double' to 'float'
   (compiling source file 'main.cpp')
   
-C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(72,63): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(80,63): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(74,64): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\Torus.h(82,64): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
 C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\main.cpp(38,17): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\main.cpp(525,52): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\main.cpp(531,48): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\main.cpp(504,52): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\BasicOpenGLProject\main.cpp(510,48): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
   Generating code
-  3 of 578 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
+  35 of 578 functions ( 6.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    20 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   BasicOpenGLProject.vcxproj -> C:\Users\gamep\Documents\GitHub\CSE-170\PA3_support_code\x64\Release\OpenGLProject.exe

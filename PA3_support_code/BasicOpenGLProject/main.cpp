@@ -36,7 +36,7 @@ bool mouse_states[8];
 // Other parameters
 bool draw_wireframe = false;
 float toRadians = M_PI / 180.0;
-bool debug_draw_normals = true;
+bool debug_draw_normals = false;
 /*=================================================================================================
 	SHADERS & TRANSFORMATIONS
 =================================================================================================*/
@@ -240,8 +240,6 @@ void CreateDebugBuffers(void)
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0); //let GPU know this is attribute 1, made up of 4 floats
 	glEnableVertexAttribArray(1);
 
-
-
 	glBindVertexArray(0); //unbind when done
 
 	//NOTE: You will probably not use an array for your own objects, as you will need to be
@@ -274,99 +272,98 @@ void reshape_func( int width, int height )
 	glViewport( 0, 0, width, height );
 	glutPostRedisplay();
 }
-
-void keyboard_func( unsigned char key, int x, int y )
+void keyboard_func(unsigned char key, int x, int y)
 {
-	key_states[ key ] = true;
+	key_states[key] = true;
 
-	switch( key )
+	switch (key)
 	{
-		case 'f':
-		{
-			draw_wireframe = !draw_wireframe;
-			if( draw_wireframe == true )
-				std::cout << "Wireframes on.\n";
-			else
-				std::cout << "Wireframes off.\n";
-			break;
-		}
-		
-		case '?':
-		{
-			std::cout << "- 'q' : increment the number of triangles(n)\n- 'a' : decrement the number of triangles(n)\n- 'w' : increment the r radius(by a small value)\n- 's' : decrement the r radius(by a small value)\n- 'e' : increment the R radius(by a small value)\n- 'd' : decrement the R radius(by a small value)\n- 'c' : Constructs the object (done automatically when using another key)\n- 'f' : toggle wireframes." << std::endl;
-			break;
-		}
-		case 'c':
-		{
-			MyTorus->Construct();
-			break;
-		}
-		case 'q':
-		{
-			MyTorus->addVerticies();
-			MyTorus->Construct();
-			break;
-		}
-		case 'a':
-		{
-			MyTorus->removeVerticies();
-			MyTorus->Construct();
-			break;
-		}
-		case 'w':
-		{
-			MyTorus->increaseInnerRadius();
-			MyTorus->Construct();
-			break;
-		}
-		case 's':
-		{
-			MyTorus->decreaseInnerRadius();
-			MyTorus->Construct();
-			break;
-		}
-		case 'e':
-		{
-			MyTorus->increaseRadius();
-			MyTorus->Construct();
-			break;
-		}
-		case 'd':
-		{
-			MyTorus->decreaseRadius();
-			MyTorus->Construct();
-			break;
-		}
+	case 'f':
+	{
+		draw_wireframe = !draw_wireframe;
+		if (draw_wireframe == true)
+			std::cout << "Wireframes on.\n";
+		else
+			std::cout << "Wireframes off.\n";
+		break;
+	}
+
+	case '?':
+	{
+		std::cout << "- 'q' : increment the number of triangles(n)\n- 'a' : decrement the number of triangles(n)\n- 'w' : increment the r radius(by a small value)\n- 's' : decrement the r radius(by a small value)\n- 'e' : increment the R radius(by a small value)\n- 'd' : decrement the R radius(by a small value)\n- 'c' : Constructs the object (done automatically when using another key)\n- 'f' : toggle wireframes." << std::endl;
+		break;
+	}
+	case 'c':
+	{
+		MyTorus->Construct();
+		break;
+	}
+	case 'q':
+	{
+		MyTorus->addVerticies();
+		MyTorus->Construct();
+		break;
+	}
+	case 'a':
+	{
+		MyTorus->removeVerticies();
+		MyTorus->Construct();
+		break;
+	}
+	case 'w':
+	{
+		MyTorus->increaseInnerRadius();
+		MyTorus->Construct();
+		break;
+	}
+	case 's':
+	{
+		MyTorus->decreaseInnerRadius();
+		MyTorus->Construct();
+		break;
+	}
+	case 'e':
+	{
+		MyTorus->increaseRadius();
+		MyTorus->Construct();
+		break;
+	}
+	case 'd':
+	{
+		MyTorus->decreaseRadius();
+		MyTorus->Construct();
+		break;
+	}
 
 
-		// Exit on escape key press
-		case '\x1B':
-		{
-			exit( EXIT_SUCCESS );
-			break;
-		}
+	// Exit on escape key press
+	case '\x1B':
+	{
+		exit(EXIT_SUCCESS);
+		break;
+	}
 	}
 }
 
-void key_released( unsigned char key, int x, int y )
+void key_released(unsigned char key, int x, int y)
 {
-	key_states[ key ] = false;
+	key_states[key] = false;
 
-	
-	
+
+
 }
 
-void key_special_pressed( int key, int x, int y )
+void key_special_pressed(int key, int x, int y)
 {
-	key_special_states[ key ] = true;
+	key_special_states[key] = true;
 }
 
-void key_special_released( int key, int x, int y )
+void key_special_released(int key, int x, int y)
 {
-	key_special_states[ key ] = false;
+	key_special_states[key] = false;
 }
 
-void mouse_func( int button, int state, int x, int y )
+void mouse_func(int button, int state, int x, int y)
 {
 	// Key 0: left button
 	// Key 1: middle button
@@ -374,57 +371,58 @@ void mouse_func( int button, int state, int x, int y )
 	// Key 3: scroll up
 	// Key 4: scroll down
 
-	if( x < 0 || x > WindowWidth || y < 0 || y > WindowHeight )
+	if (x < 0 || x > WindowWidth || y < 0 || y > WindowHeight)
 		return;
 
 	float px, py;
-	window_to_scene( x, y, px, py );
+	window_to_scene(x, y, px, py);
 
-	if( button == 3 )
+	if (button == 3)
 	{
 		perspZoom += 0.03f;
 	}
-	else if( button == 4 )
+	else if (button == 4)
 	{
-		if( perspZoom - 0.03f > 0.0f )
+		if (perspZoom - 0.03f > 0.0f)
 			perspZoom -= 0.03f;
 	}
 
-	mouse_states[ button ] = ( state == GLUT_DOWN );
+	mouse_states[button] = (state == GLUT_DOWN);
 
 	LastMousePosX = x;
 	LastMousePosY = y;
 }
 
-void passive_motion_func( int x, int y )
+void passive_motion_func(int x, int y)
 {
-	if( x < 0 || x > WindowWidth || y < 0 || y > WindowHeight )
+	if (x < 0 || x > WindowWidth || y < 0 || y > WindowHeight)
 		return;
 
 	float px, py;
-	window_to_scene( x, y, px, py );
+	window_to_scene(x, y, px, py);
 
 	LastMousePosX = x;
 	LastMousePosY = y;
 }
 
-void active_motion_func( int x, int y )
+void active_motion_func(int x, int y)
 {
-	if( x < 0 || x > WindowWidth || y < 0 || y > WindowHeight )
+	if (x < 0 || x > WindowWidth || y < 0 || y > WindowHeight)
 		return;
 
 	float px, py;
-	window_to_scene( x, y, px, py );
+	window_to_scene(x, y, px, py);
 
-	if( mouse_states[0] == true )
+	if (mouse_states[0] == true)
 	{
-		perspRotationY += ( x - LastMousePosX ) * perspSensitivity;
-		perspRotationX += ( y - LastMousePosY ) * perspSensitivity;
+		perspRotationY += (x - LastMousePosX) * perspSensitivity;
+		perspRotationX += (y - LastMousePosY) * perspSensitivity;
 	}
 
 	LastMousePosX = x;
 	LastMousePosY = y;
 }
+
 
 /*=================================================================================================
 	RENDERING
@@ -461,32 +459,13 @@ void display_func( void )
 		draw_normals.clear();
 		debug_normals.clear();
 		debug_normals_colors.clear();
+		
 		for (int j = 0; j < Tori[i]->mesh.size(); j++) {
 			draw_verticies.push_back(Tori[i]->mesh[j]);
 			draw_colors.push_back(Tori[i]->color[j]);
 			draw_normals.push_back(Tori[i]->normals[j]);
+			debug_normals_colors.push_back(Tori[i]->normal_colors[j]);
 		};
-		if (debug_draw_normals == true) {
-			for (int j = 0; j < Tori[i]->verticies.size(); j++) {
-				Vector temp = Tori[i]->verticies[j] + Tori[i]->normal_vects[j];
-				debug_normals.push_back(Tori[i]->verticies[j].x);
-				debug_normals.push_back(Tori[i]->verticies[j].y);
-				debug_normals.push_back(Tori[i]->verticies[j].z);
-				debug_normals.push_back(1.0);
-				debug_normals.push_back(temp.x);
-				debug_normals.push_back(temp.y);
-				debug_normals.push_back(temp.z);
-				debug_normals.push_back(1.0);
-				debug_normals_colors.push_back(1.0);
-				debug_normals_colors.push_back(0.0);
-				debug_normals_colors.push_back(0.0);
-				debug_normals_colors.push_back(1.0);
-				debug_normals_colors.push_back(1.0);
-				debug_normals_colors.push_back(0.0);
-				debug_normals_colors.push_back(0.0);
-				debug_normals_colors.push_back(1.0);
-			}
-		}
 		CreateDrawBuffers();
 		glm::mat4 rotationMatrixX (
 			{ 1.0f, 0.0f, 0.0f, 0.0f },
@@ -526,7 +505,7 @@ void display_func( void )
 
 		if (debug_draw_normals == true) {
 			CreateDebugBuffers();
-			//PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(PerspModelMatrix * scaleMatrix * translationMatrix * rotationMatrixZ * rotationMatrixY * rotationMatrixX), 4, GL_FALSE, 1);
+			PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(PerspModelMatrix * scaleMatrix * translationMatrix * rotationMatrixZ * rotationMatrixY * rotationMatrixX), 4, GL_FALSE, 1);
 			glBindVertexArray(debug_VAO);
 			glDrawArrays(GL_LINES, 0, debug_normals.size());
 		}

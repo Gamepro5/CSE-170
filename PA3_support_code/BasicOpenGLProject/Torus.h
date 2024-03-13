@@ -19,13 +19,18 @@ private:
         return result;
     };
 public:
+    bool smooth_shading = false;
     float radius = 2;
     float inner_radius = 0.5;
     float vertexCount = 500;
     std::vector<Triangle> triangles;
     std::vector<Vector> verticies;
-    std::vector<Vector> normal_vects;
+    std::vector<Vector> flat_normals;
+    std::vector<Vector> smooth_normals;
+    std::vector<Vector> ringCenters;
+
     std::vector<float> normals;
+    std::vector<float> normal_colors;
     int slices = 8;
     int loops = 20;
 
@@ -66,7 +71,10 @@ public:
         triangles.clear();
         verticies.clear();
         normals.clear();
-
+        smooth_normals.clear();
+        flat_normals.clear();
+        ringCenters.clear();
+        normal_colors.clear();
        
         std::vector<std::vector<Vector>> rings;
         for (float theta = 0; theta < 2*M_PI; theta+= 2 * M_PI/sqrt(vertexCount)) {
@@ -75,20 +83,33 @@ public:
                 ring.push_back(Vector((radius + inner_radius * cos(theta)) * cos(phi), (radius + inner_radius * cos(theta)) * sin(phi), inner_radius * sin(theta)));
             }
             rings.push_back(ring);
+            ringCenters.push_back(Vector(radius * cos(theta), radius * sin(theta), 0));
         }
         for (int i = 0; i < rings.size()-1; i++) {
             for (int j = 0; j < rings[i].size()-1; j++) {
                 auto t = Triangle();
                 t.x = rings[i][j];
+                smooth_normals.push_back(rings[i][j]);
+                smooth_normals.push_back(rings[i][j] - ringCenters[i]);
                 t.y = rings[i][j + 1];
+                smooth_normals.push_back(rings[i][j+1]);
+                smooth_normals.push_back(rings[i][j + 1] - ringCenters[i]);
                 t.z = rings[i + 1][j];
+                smooth_normals.push_back(rings[i+1][j]);
+                smooth_normals.push_back(rings[i+1][j] - ringCenters[i+1]);
 
                 triangles.push_back(t);
 
                 auto t2 = Triangle();
                 t2.x = rings[i+1][j+1];
+                smooth_normals.push_back(rings[i+1][j+1]);
+                smooth_normals.push_back(rings[i + 1][j + 1] - ringCenters[i+1]);
                 t2.y = rings[i+1][j];
+                smooth_normals.push_back(rings[i + 1][j]);
+                smooth_normals.push_back(rings[i + 1][j] - ringCenters[i + 1]);
                 t2.z = rings[i][j+1];
+                smooth_normals.push_back(rings[i][j+1]);
+                smooth_normals.push_back(rings[i][j+1] - ringCenters[i]);
 
                 triangles.push_back(t2);
             }
@@ -126,21 +147,51 @@ public:
             color.push_back(1.0);
 
             Vector normal = calculateNormal(triangles[i].x, triangles[i].y, triangles[i].z);
-            normal_vects.push_back(normal);
-            normal_vects.push_back(normal);
-            normal_vects.push_back(normal);
-            normals.push_back(normal.x);
-            normals.push_back(normal.y);
-            normals.push_back(normal.z);
-            normals.push_back(1.0f);
-            normals.push_back(normal.x);
-            normals.push_back(normal.y);
-            normals.push_back(normal.z);
-            normals.push_back(1.0f);
-            normals.push_back(normal.x);
-            normals.push_back(normal.y);
-            normals.push_back(normal.z);
-            normals.push_back(1.0f);
+            flat_normals.push_back(normal);
+            flat_normals.push_back(normal);
+            flat_normals.push_back(normal);
+           
+           
+        }
+        if (smooth_shading == true) {
+            for (int i = 0; i < smooth_normals.size(); i++) {
+                
+                    normals.push_back(smooth_normals[i].x);
+                    normals.push_back(smooth_normals[i].y);
+                    normals.push_back(smooth_normals[i].z);
+                    normals.push_back(1.0);
+
+                    normal_colors.push_back(1.0);
+                    normal_colors.push_back(0.0);
+                    normal_colors.push_back(0.0);
+                    normal_colors.push_back(1.0);
+                
+                
+            }
+            
+        }
+        else {
+            for (int i = 0; i < flat_normals.size(); i++) {
+                
+                    Vector temp = verticies[i] + flat_normals[i];
+                    normals.push_back(verticies[i].x);
+                    normals.push_back(verticies[i].y);
+                    normals.push_back(verticies[i].z);
+                    normals.push_back(1.0);
+                    normals.push_back(temp.x);
+                    normals.push_back(temp.y);
+                    normals.push_back(temp.z);
+                    normals.push_back(1.0);
+                    normal_colors.push_back(1.0);
+                    normal_colors.push_back(0.0);
+                    normal_colors.push_back(0.0);
+                    normal_colors.push_back(1.0);
+                    normal_colors.push_back(1.0);
+                    normal_colors.push_back(0.0);
+                    normal_colors.push_back(0.0);
+                    normal_colors.push_back(1.0);
+                
+            }
         }
         
     }
