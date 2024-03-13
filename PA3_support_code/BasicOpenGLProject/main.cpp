@@ -568,6 +568,9 @@ void init( void )
 	// PUTTING DATA FROM ENTITY OBJECTS INTO THE DRAW AND COLOR VECTORS TO BE PASSED INTO THE GPU.
 	CreateDrawBuffers();
 
+
+	CreateDebugBuffers();
+
 	std::cout << "Finished initializing...\n\n";
 }
 
