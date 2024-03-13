@@ -24,6 +24,7 @@ public:
     float vertexCount = 500;
     std::vector<Triangle> triangles;
     std::vector<Vector> verticies;
+    std::vector<Vector> normal_vects;
     std::vector<float> normals;
     int slices = 8;
     int loops = 20;
@@ -65,6 +66,7 @@ public:
         triangles.clear();
         verticies.clear();
         normals.clear();
+
        
         std::vector<std::vector<Vector>> rings;
         for (float theta = 0; theta < 2*M_PI; theta+= 2 * M_PI/sqrt(vertexCount)) {
@@ -124,6 +126,9 @@ public:
             color.push_back(1.0);
 
             Vector normal = calculateNormal(triangles[i].x, triangles[i].y, triangles[i].z);
+            normal_vects.push_back(normal);
+            normal_vects.push_back(normal);
+            normal_vects.push_back(normal);
             normals.push_back(normal.x);
             normals.push_back(normal.y);
             normals.push_back(normal.z);

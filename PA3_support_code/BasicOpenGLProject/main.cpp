@@ -36,6 +36,7 @@ bool mouse_states[8];
 // Other parameters
 bool draw_wireframe = false;
 float toRadians = M_PI / 180.0;
+bool debug_draw_normals = true;
 /*=================================================================================================
 	SHADERS & TRANSFORMATIONS
 =================================================================================================*/
@@ -92,6 +93,13 @@ std::vector<float> draw_verticies{};
 std::vector<float> draw_colors{};
 
 std::vector<float> draw_normals{};
+
+GLuint debug_VAO;
+GLuint debug_VBO[2];
+
+std::vector<float> debug_normals{};
+
+std::vector<float> debug_normals_colors{};
 
 Torus* MyTorus = new Torus();
 
@@ -204,6 +212,35 @@ void CreateDrawBuffers(void)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(draw_normals[0]) * draw_normals.size(), &draw_normals[0], GL_STATIC_DRAW); //send color array to the GPU
 	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0); //let GPU know this is attribute 1, made up of 4 floats
 	glEnableVertexAttribArray(2);
+
+	glBindVertexArray(0); //unbind when done
+
+	//NOTE: You will probably not use an array for your own objects, as you will need to be
+	//      able to dynamically resize the number of vertices. Remember that the sizeof()
+	//      operator will not give an accurate answer on an entire vector. Instead, you will
+	//      have to do a calculation such as sizeof(v[0]) * v.size().
+}
+
+void CreateDebugBuffers(void)
+{
+	glGenVertexArrays(1, &debug_VAO); //generate 1 new VAO, its ID is returned in axis_VAO
+	glBindVertexArray(debug_VAO); //bind the VAO so the subsequent commands modify it
+
+	glGenBuffers(2, &debug_VBO[0]); //generate 2 buffers for data, their IDs are returned to the axis_VBO array
+
+	// first buffer: vertex coordinates
+	glBindBuffer(GL_ARRAY_BUFFER, debug_VBO[0]); //bind the first buffer using its ID
+	glBufferData(GL_ARRAY_BUFFER, sizeof(debug_normals[0]) * debug_normals.size(), &debug_normals[0], GL_STATIC_DRAW); //send coordinate array to the GPU
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0); //let GPU know this is attribute 0, made up of 4 floats
+	glEnableVertexAttribArray(0);
+
+	// second buffer: colors
+	glBindBuffer(GL_ARRAY_BUFFER, debug_VBO[1]); //bind the second buffer using its ID
+	glBufferData(GL_ARRAY_BUFFER, sizeof(debug_normals_colors[0]) * debug_normals_colors.size(), &debug_normals_colors[0], GL_STATIC_DRAW); //send color array to the GPU
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0); //let GPU know this is attribute 1, made up of 4 floats
+	glEnableVertexAttribArray(1);
+
+
 
 	glBindVertexArray(0); //unbind when done
 
@@ -422,11 +459,34 @@ void display_func( void )
 		draw_verticies.clear();
 		draw_colors.clear();
 		draw_normals.clear();
+		debug_normals.clear();
+		debug_normals_colors.clear();
 		for (int j = 0; j < Tori[i]->mesh.size(); j++) {
 			draw_verticies.push_back(Tori[i]->mesh[j]);
 			draw_colors.push_back(Tori[i]->color[j]);
 			draw_normals.push_back(Tori[i]->normals[j]);
 		};
+		if (debug_draw_normals == true) {
+			for (int j = 0; j < Tori[i]->verticies.size(); j++) {
+				Vector temp = Tori[i]->verticies[j] + Tori[i]->normal_vects[j];
+				debug_normals.push_back(Tori[i]->verticies[j].x);
+				debug_normals.push_back(Tori[i]->verticies[j].y);
+				debug_normals.push_back(Tori[i]->verticies[j].z);
+				debug_normals.push_back(1.0);
+				debug_normals.push_back(temp.x);
+				debug_normals.push_back(temp.y);
+				debug_normals.push_back(temp.z);
+				debug_normals.push_back(1.0);
+				debug_normals_colors.push_back(1.0);
+				debug_normals_colors.push_back(0.0);
+				debug_normals_colors.push_back(0.0);
+				debug_normals_colors.push_back(1.0);
+				debug_normals_colors.push_back(1.0);
+				debug_normals_colors.push_back(0.0);
+				debug_normals_colors.push_back(0.0);
+				debug_normals_colors.push_back(1.0);
+			}
+		}
 		CreateDrawBuffers();
 		glm::mat4 rotationMatrixX (
 			{ 1.0f, 0.0f, 0.0f, 0.0f },
@@ -463,6 +523,13 @@ void display_func( void )
 		//draw it
 		glBindVertexArray(draw_VAO);
 		glDrawArrays(GL_TRIANGLES, 0, draw_verticies.size());
+
+		if (debug_draw_normals == true) {
+			CreateDebugBuffers();
+			//PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(PerspModelMatrix * scaleMatrix * translationMatrix * rotationMatrixZ * rotationMatrixY * rotationMatrixX), 4, GL_FALSE, 1);
+			glBindVertexArray(debug_VAO);
+			glDrawArrays(GL_LINES, 0, debug_normals.size());
+		}
 	};
 
 
