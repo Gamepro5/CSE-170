@@ -43,6 +43,7 @@ bool debug_draw_normals = false;
 
 ShaderProgram PassthroughShader;
 ShaderProgram PerspectiveShader;
+ShaderProgram LightShader;
 
 glm::mat4 PerspProjectionMatrix( 1.0f );
 glm::mat4 PerspViewMatrix( 1.0f );
@@ -151,7 +152,7 @@ void CreateShaders( void )
 	// Renders using perspective projection
 	PerspectiveShader.Create( "./shaders/persp.vert", "./shaders/persp.frag" );
 
-	PerspectiveShader.Create("./shaders/persplight.vert", "./shaders/persplight.frag");
+	LightShader.Create("./shaders/persplight.vert", "./shaders/persplight.frag");
 	//
 	// Additional shaders would be defined here
 	//
@@ -466,7 +467,7 @@ void display_func( void )
 			draw_normals.push_back(Tori[i]->normals[j]);
 			debug_normals_colors.push_back(Tori[i]->normal_colors[j]);
 		};
-		CreateDrawBuffers();
+		
 		glm::mat4 rotationMatrixX (
 			{ 1.0f, 0.0f, 0.0f, 0.0f },
 			{ 0.0f, std::cos(Tori[i]->rotation.x), -std::sin(Tori[i]->rotation.x), 0.0f },
@@ -498,12 +499,19 @@ void display_func( void )
 			{ 0.0f, 0.0f, 0.0f, 1.0f }
 		);
 		//apply transformation shader
-		PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(PerspModelMatrix * scaleMatrix * translationMatrix * rotationMatrixZ * rotationMatrixY * rotationMatrixX), 4, GL_FALSE, 1);
+		LightShader.Use();
+		LightShader.SetUniform("projectionMatrix", glm::value_ptr(PerspProjectionMatrix), 4, GL_FALSE, 1);
+		LightShader.SetUniform("viewMatrix", glm::value_ptr(PerspViewMatrix), 4, GL_FALSE, 1);
+		LightShader.SetUniform("modelMatrix", glm::value_ptr(PerspModelMatrix * scaleMatrix * translationMatrix * rotationMatrixZ * rotationMatrixY * rotationMatrixX), 4, GL_FALSE, 1);
 		//draw it
+		CreateDrawBuffers();
 		glBindVertexArray(draw_VAO);
 		glDrawArrays(GL_TRIANGLES, 0, draw_verticies.size());
 
 		if (debug_draw_normals == true) {
+			PerspectiveShader.Use();
+			PerspectiveShader.SetUniform( "projectionMatrix", glm::value_ptr( PerspProjectionMatrix ), 4, GL_FALSE, 1 );
+			PerspectiveShader.SetUniform( "viewMatrix", glm::value_ptr( PerspViewMatrix ), 4, GL_FALSE, 1 );
 			CreateDebugBuffers();
 			PerspectiveShader.SetUniform("modelMatrix", glm::value_ptr(PerspModelMatrix * scaleMatrix * translationMatrix * rotationMatrixZ * rotationMatrixY * rotationMatrixX), 4, GL_FALSE, 1);
 			glBindVertexArray(debug_VAO);
