@@ -87,7 +87,7 @@ float axis_colors[] = {
 };
 
 GLuint draw_VAO;
-GLuint draw_VBO[2];
+GLuint draw_VBO[3];
 
 std::vector<float> draw_verticies{};
 
@@ -194,7 +194,7 @@ void CreateDrawBuffers(void)
 	glGenVertexArrays(1, &draw_VAO); //generate 1 new VAO, its ID is returned in axis_VAO
 	glBindVertexArray(draw_VAO); //bind the VAO so the subsequent commands modify it
 
-	glGenBuffers(2, &draw_VBO[0]); //generate 2 buffers for data, their IDs are returned to the axis_VBO array
+	glGenBuffers(3, &draw_VBO[0]); //generate 2 buffers for data, their IDs are returned to the axis_VBO array
 
 	// first buffer: vertex coordinates
 	glBindBuffer(GL_ARRAY_BUFFER, draw_VBO[0]); //bind the first buffer using its ID
@@ -291,7 +291,7 @@ void keyboard_func(unsigned char key, int x, int y)
 
 	case '?':
 	{
-		std::cout << "- 'q' : increment the number of triangles(n)\n- 'a' : decrement the number of triangles(n)\n- 'w' : increment the r radius(by a small value)\n- 's' : decrement the r radius(by a small value)\n- 'e' : increment the R radius(by a small value)\n- 'd' : decrement the R radius(by a small value)\n- 'c' : Constructs the object (done automatically when using another key)\n- 'f' : toggle wireframes." << std::endl;
+		std::cout << "- 'q' : increment the number of triangles(n)\n- 'a' : decrement the number of triangles(n)\n- 'w' : increment the r radius(by a small value)\n- 's' : decrement the r radius(by a small value)\n- 'e' : increment the R radius(by a small value)\n- 'd' : decrement the R radius(by a small value)\n- 'c' : Constructs the object (done automatically when using another key)\n- 'f' : toggle wireframes.\n- 'i' : toggle draw normals\n- 'p' : toggle shading mode" << std::endl;
 		break;
 	}
 	case 'c':
@@ -332,6 +332,17 @@ void keyboard_func(unsigned char key, int x, int y)
 	case 'd':
 	{
 		MyTorus->decreaseRadius();
+		MyTorus->Construct();
+		break;
+	}
+	case 'i':
+	{
+		debug_draw_normals = !debug_draw_normals;
+		break;
+	}
+	case 'p':
+	{
+		MyTorus->smooth_shading = !MyTorus->smooth_shading;
 		MyTorus->Construct();
 		break;
 	}
@@ -430,10 +441,11 @@ void active_motion_func(int x, int y)
 =================================================================================================*/
 
 void display_func( void )
-{
+{	
 	// Clear the contents of the back buffer
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
+	CreateAxisBuffers();
 	// Update transformation matrices
 	CreateTransformationMatrices();
 
@@ -465,8 +477,11 @@ void display_func( void )
 			draw_verticies.push_back(Tori[i]->mesh[j]);
 			draw_colors.push_back(Tori[i]->color[j]);
 			draw_normals.push_back(Tori[i]->normals[j]);
-			debug_normals_colors.push_back(Tori[i]->normal_colors[j]);
 		};
+		for (int j = 0; j < Tori[i]->debug_normals.size();j++) {
+			debug_normals.push_back(Tori[i]->debug_normals[j]);
+			debug_normals_colors.push_back(Tori[i]->debug_normals_colors[j]);
+		}
 		
 		glm::mat4 rotationMatrixX (
 			{ 1.0f, 0.0f, 0.0f, 0.0f },

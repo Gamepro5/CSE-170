@@ -29,6 +29,9 @@ public:
     std::vector<Vector> smooth_normals;
     std::vector<Vector> ringCenters;
 
+    std::vector<float> debug_normals;
+    std::vector<float> debug_normals_colors;
+
     std::vector<float> normals;
     std::vector<float> normal_colors;
     int slices = 8;
@@ -75,6 +78,7 @@ public:
         flat_normals.clear();
         ringCenters.clear();
         normal_colors.clear();
+        debug_normals.clear();
        
         std::vector<std::vector<Vector>> rings;
         for (float theta = 0; theta < 2*M_PI; theta+= 2 * M_PI/sqrt(vertexCount)) {
@@ -85,37 +89,40 @@ public:
             rings.push_back(ring);
             ringCenters.push_back(Vector(radius * cos(theta), radius * sin(theta), 0));
         }
-        for (int i = 0; i < rings.size()-1; i++) {
-            for (int j = 0; j < rings[i].size()-1; j++) {
+        for (int i = 0; i < rings.size(); i++) {
+            for (int j = 0; j < rings[i].size(); j++) {
+                int modulo_i = (i + 1) % rings.size();
+                int modulo_j = (j + 1) % rings[i].size();
                 auto t = Triangle();
                 t.x = rings[i][j];
                 smooth_normals.push_back(rings[i][j]);
                 smooth_normals.push_back(rings[i][j] - ringCenters[i]);
-                t.y = rings[i][j + 1];
-                smooth_normals.push_back(rings[i][j+1]);
-                smooth_normals.push_back(rings[i][j + 1] - ringCenters[i]);
-                t.z = rings[i + 1][j];
-                smooth_normals.push_back(rings[i+1][j]);
-                smooth_normals.push_back(rings[i+1][j] - ringCenters[i+1]);
+                t.y = rings[i][modulo_j];
+                smooth_normals.push_back(rings[i][modulo_j]);
+                smooth_normals.push_back(rings[i][modulo_j] - ringCenters[i]);
+                t.z = rings[modulo_i][j];
+                smooth_normals.push_back(rings[modulo_i][j]);
+                smooth_normals.push_back(rings[modulo_i][j] - ringCenters[modulo_i]);
 
                 triangles.push_back(t);
 
                 auto t2 = Triangle();
-                t2.x = rings[i+1][j+1];
-                smooth_normals.push_back(rings[i+1][j+1]);
-                smooth_normals.push_back(rings[i + 1][j + 1] - ringCenters[i+1]);
-                t2.y = rings[i+1][j];
-                smooth_normals.push_back(rings[i + 1][j]);
-                smooth_normals.push_back(rings[i + 1][j] - ringCenters[i + 1]);
-                t2.z = rings[i][j+1];
-                smooth_normals.push_back(rings[i][j+1]);
-                smooth_normals.push_back(rings[i][j+1] - ringCenters[i]);
+                t2.x = rings[modulo_i][modulo_j];
+                smooth_normals.push_back(rings[modulo_i][modulo_j]);
+                smooth_normals.push_back(rings[modulo_i][modulo_j] - ringCenters[modulo_i]);
+                t2.y = rings[modulo_i][j];
+                smooth_normals.push_back(rings[modulo_i][j]);
+                smooth_normals.push_back(rings[modulo_i][j] - ringCenters[modulo_i]);
+                t2.z = rings[i][modulo_j];
+                smooth_normals.push_back(rings[i][modulo_j]);
+                smooth_normals.push_back(rings[i][modulo_j] - ringCenters[i]);
 
                 triangles.push_back(t2);
             }
         }
 
         for (int i = 0; i < triangles.size(); i++) {
+           
             mesh.push_back(triangles[i].x.x);
             mesh.push_back(triangles[i].x.y);
             mesh.push_back(triangles[i].x.z);
@@ -147,6 +154,9 @@ public:
             color.push_back(1.0);
 
             Vector normal = calculateNormal(triangles[i].x, triangles[i].y, triangles[i].z);
+            verticies.push_back(triangles[i].x);
+            verticies.push_back(triangles[i].y);
+            verticies.push_back(triangles[i].z);
             flat_normals.push_back(normal);
             flat_normals.push_back(normal);
             flat_normals.push_back(normal);
@@ -178,14 +188,7 @@ public:
                     normals.push_back(verticies[i].y);
                     normals.push_back(verticies[i].z);
                     normals.push_back(1.0);
-                    normals.push_back(temp.x);
-                    normals.push_back(temp.y);
-                    normals.push_back(temp.z);
-                    normals.push_back(1.0);
-                    normal_colors.push_back(1.0);
-                    normal_colors.push_back(0.0);
-                    normal_colors.push_back(0.0);
-                    normal_colors.push_back(1.0);
+                    
                     normal_colors.push_back(1.0);
                     normal_colors.push_back(0.0);
                     normal_colors.push_back(0.0);
