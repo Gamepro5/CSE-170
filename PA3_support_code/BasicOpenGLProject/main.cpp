@@ -291,7 +291,7 @@ void keyboard_func(unsigned char key, int x, int y)
 
 	case '?':
 	{
-		std::cout << "- 'q' : increment the number of triangles(n)\n- 'a' : decrement the number of triangles(n)\n- 'w' : increment the r radius(by a small value)\n- 's' : decrement the r radius(by a small value)\n- 'e' : increment the R radius(by a small value)\n- 'd' : decrement the R radius(by a small value)\n- 'c' : Constructs the object (done automatically when using another key)\n- 'f' : toggle wireframes.\n- 'i' : toggle draw normals\n- 'p' : toggle shading mode" << std::endl;
+		std::cout << "- 'q' : increment the number of triangles(n)\n- 'a' : decrement the number of triangles(n)\n- 'w' : increment the r radius(by a small value)\n- 's' : decrement the r radius(by a small value)\n- 'e' : increment the R radius(by a small value)\n- 'd' : decrement the R radius(by a small value)\n- 'c' : Constructs the object (done automatically when using another key)\n- 'f' : toggle wireframes.\n- 'i' : toggle draw normals.\n- 'p' : toggle shading mode." << std::endl;
 		break;
 	}
 	case 'c':

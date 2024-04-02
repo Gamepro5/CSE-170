@@ -11,7 +11,25 @@
 
 class Torus : public Entity {
 private:
+    void addDebugNormal(Vector start, Vector end) {
+        debug_normals.push_back(start.x);
+        debug_normals.push_back(start.y);
+        debug_normals.push_back(start.z);
+        debug_normals.push_back(1.0);
+        debug_normals.push_back(start.x + end.x);
+        debug_normals.push_back(start.y + end.y);
+        debug_normals.push_back(start.z + end.z);
+        debug_normals.push_back(1.0);
 
+        debug_normals_colors.push_back(1.0);
+        debug_normals_colors.push_back(0.64);
+        debug_normals_colors.push_back(0.0);
+        debug_normals_colors.push_back(1.0);
+        debug_normals_colors.push_back(1.0);
+        debug_normals_colors.push_back(0.64);
+        debug_normals_colors.push_back(0.0);
+        debug_normals_colors.push_back(1.0);
+    }
     Vector calculateNormal(Vector p1, Vector p2, Vector p3) {
         Vector U = p2 - p1;
         Vector V = p3 - p1;
@@ -33,7 +51,6 @@ public:
     std::vector<float> debug_normals_colors;
 
     std::vector<float> normals;
-    std::vector<float> normal_colors;
     int slices = 8;
     int loops = 20;
 
@@ -77,9 +94,9 @@ public:
         smooth_normals.clear();
         flat_normals.clear();
         ringCenters.clear();
-        normal_colors.clear();
         debug_normals.clear();
-       
+        debug_normals_colors.clear();
+
         std::vector<std::vector<Vector>> rings;
         for (float theta = 0; theta < 2*M_PI; theta+= 2 * M_PI/sqrt(vertexCount)) {
             std::vector<Vector> ring;
@@ -87,7 +104,9 @@ public:
                 ring.push_back(Vector((radius + inner_radius * cos(theta)) * cos(phi), (radius + inner_radius * cos(theta)) * sin(phi), inner_radius * sin(theta)));
             }
             rings.push_back(ring);
-            ringCenters.push_back(Vector(radius * cos(theta), radius * sin(theta), 0));
+        }
+        for (float phi = 0; phi < 2 * M_PI; phi += 2 * M_PI / sqrt(vertexCount)) {
+            ringCenters.push_back(Vector(radius * cos(phi), radius * sin(phi), 0));
         }
         for (int i = 0; i < rings.size(); i++) {
             for (int j = 0; j < rings[i].size(); j++) {
@@ -95,27 +114,26 @@ public:
                 int modulo_j = (j + 1) % rings[i].size();
                 auto t = Triangle();
                 t.x = rings[i][j];
-                smooth_normals.push_back(rings[i][j]);
-                smooth_normals.push_back(rings[i][j] - ringCenters[i]);
+                smooth_normals.push_back(rings[i][j] - ringCenters[j]);
+                addDebugNormal(rings[i][j], (rings[i][j] - ringCenters[j]).normalized());
                 t.y = rings[i][modulo_j];
-                smooth_normals.push_back(rings[i][modulo_j]);
-                smooth_normals.push_back(rings[i][modulo_j] - ringCenters[i]);
+                smooth_normals.push_back(rings[i][modulo_j] - ringCenters[modulo_j]);
+                addDebugNormal(rings[i][modulo_j], (rings[i][modulo_j] - ringCenters[modulo_j]).normalized());
                 t.z = rings[modulo_i][j];
-                smooth_normals.push_back(rings[modulo_i][j]);
-                smooth_normals.push_back(rings[modulo_i][j] - ringCenters[modulo_i]);
-
+                smooth_normals.push_back(rings[modulo_i][j] - ringCenters[j]);
+                addDebugNormal(rings[modulo_i][j], (rings[modulo_i][j] - ringCenters[j]).normalized());
                 triangles.push_back(t);
 
                 auto t2 = Triangle();
                 t2.x = rings[modulo_i][modulo_j];
-                smooth_normals.push_back(rings[modulo_i][modulo_j]);
-                smooth_normals.push_back(rings[modulo_i][modulo_j] - ringCenters[modulo_i]);
+                smooth_normals.push_back(rings[modulo_i][modulo_j] - ringCenters[modulo_j]);
+                addDebugNormal(rings[modulo_i][modulo_j], (rings[modulo_i][modulo_j] - ringCenters[modulo_j]).normalized());
                 t2.y = rings[modulo_i][j];
-                smooth_normals.push_back(rings[modulo_i][j]);
-                smooth_normals.push_back(rings[modulo_i][j] - ringCenters[modulo_i]);
+                smooth_normals.push_back(rings[modulo_i][j] - ringCenters[j]);
+                addDebugNormal(rings[modulo_i][j], (rings[modulo_i][j] - ringCenters[j]).normalized());
                 t2.z = rings[i][modulo_j];
-                smooth_normals.push_back(rings[i][modulo_j]);
-                smooth_normals.push_back(rings[i][modulo_j] - ringCenters[i]);
+                smooth_normals.push_back(rings[i][modulo_j] - ringCenters[modulo_j]);
+                addDebugNormal(rings[i][modulo_j], (rings[i][modulo_j] - ringCenters[modulo_j]).normalized());
 
                 triangles.push_back(t2);
             }
@@ -170,29 +188,21 @@ public:
                     normals.push_back(smooth_normals[i].y);
                     normals.push_back(smooth_normals[i].z);
                     normals.push_back(1.0);
-
-                    normal_colors.push_back(1.0);
-                    normal_colors.push_back(0.0);
-                    normal_colors.push_back(0.0);
-                    normal_colors.push_back(1.0);
-                
                 
             }
             
         }
         else {
+            debug_normals.clear();
+            debug_normals_colors.clear();
             for (int i = 0; i < flat_normals.size(); i++) {
-                
-                    Vector temp = verticies[i] + flat_normals[i];
-                    normals.push_back(verticies[i].x);
-                    normals.push_back(verticies[i].y);
-                    normals.push_back(verticies[i].z);
-                    normals.push_back(1.0);
                     
-                    normal_colors.push_back(1.0);
-                    normal_colors.push_back(0.0);
-                    normal_colors.push_back(0.0);
-                    normal_colors.push_back(1.0);
+                    addDebugNormal(verticies[i], flat_normals[i].normalized());
+
+                    normals.push_back(flat_normals[i].x);
+                    normals.push_back(flat_normals[i].y);
+                    normals.push_back(flat_normals[i].z);
+                    normals.push_back(1.0);
                 
             }
         }

@@ -17,6 +17,16 @@ public:
         y = _y;
         z = _z;
     };
+    float length() {
+        return sqrt((pow(x, 2) + pow(y, 2) + pow(z, 2)));
+    }
+    Vector normalized() {
+        Vector result;
+        result.x = x / length();
+        result.y = y / length();
+        result.z = z / length();
+        return result;
+    }
     void print() {
         std::cout << "Vector(" << x << ", " << y << ", " << z << ")" << std::endl;
     }
