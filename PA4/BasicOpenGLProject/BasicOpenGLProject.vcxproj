@@ -145,13 +145,9 @@
     <ClCompile Include="shaderprogram.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Downloads\stb_image.h" />
-    <ClInclude Include="Entity.h" />
+    <ClInclude Include="..\..\PA4_JacobThompson\BasicOpenGLProject\stb_image.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shaderprogram.h" />
-    <ClInclude Include="Torus.h" />
-    <ClInclude Include="Triangle.h" />
-    <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\persp.frag" />

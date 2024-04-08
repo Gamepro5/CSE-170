@@ -35,19 +35,7 @@
     <ClInclude Include="shaderprogram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Torus.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Triangle.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Downloads\stb_image.h">
+    <ClInclude Include="..\..\PA4_JacobThompson\BasicOpenGLProject\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

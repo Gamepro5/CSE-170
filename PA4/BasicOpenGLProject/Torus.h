@@ -1,7 +1,6 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <vector>
-#include "Vector.h"
 #include "Entity.h"
 #include <math.h>
 #include <vector>
@@ -11,29 +10,15 @@
 
 class Torus : public Entity {
 private:
-    void addDebugNormal(Vector start, Vector end) {
-        debug_normals.push_back(start.x);
-        debug_normals.push_back(start.y);
-        debug_normals.push_back(start.z);
-        debug_normals.push_back(1.0);
-        debug_normals.push_back(start.x + end.x);
-        debug_normals.push_back(start.y + end.y);
-        debug_normals.push_back(start.z + end.z);
-        debug_normals.push_back(1.0);
-
-        debug_normals_colors.push_back(1.0);
-        debug_normals_colors.push_back(0.64);
-        debug_normals_colors.push_back(0.0);
-        debug_normals_colors.push_back(1.0);
-        debug_normals_colors.push_back(1.0);
-        debug_normals_colors.push_back(0.64);
-        debug_normals_colors.push_back(0.0);
-        debug_normals_colors.push_back(1.0);
+    void addDebugNormal(glm::vec4 start, glm::vec4 end) {
+        debug_normals.push_back(start);
+        debug_normals.push_back(start + end);
+        debug_normals_colors.push_back(glm::vec4(1.0, 0.64, 0.0, 1.0));
     }
-    Vector calculateNormal(Vector p1, Vector p2, Vector p3) {
-        Vector U = p2 - p1;
-        Vector V = p3 - p1;
-        Vector result = Vector((U.y * V.z) - (U.z * V.y), (U.z * V.x) - (U.x * V.z), (U.x * V.y) - (U.y * V.x));
+    glm::vec4 calculateNormal(glm::vec4 p1, glm::vec4 p2, glm::vec4 p3) {
+        glm::vec4 U = p2 - p1;
+        glm::vec4 V = p3 - p1;
+        glm::vec4 result = glm::vec4((U.y * V.z) - (U.z * V.y), (U.z * V.x) - (U.x * V.z), (U.x * V.y) - (U.y * V.x), 1.0);
         return result;
     };
 public:
@@ -42,11 +27,11 @@ public:
     float inner_radius = 0.5;
     float vertexCount = 500;
     std::vector<Triangle> triangles;
-    std::vector<Vector> verticies;
-    std::vector<Vector> flat_normals;
-    std::vector<Vector> smooth_normals;
-    std::vector<Vector> ringCenters;
-    
+    std::vector<glm::vec4> flat_normals;
+    std::vector<glm::vec4> smooth_normals;
+    std::vector<glm::vec4> ringCenters;
+
+
     int slices = 8;
     int loops = 20;
 
@@ -54,6 +39,7 @@ public:
     int _tubeSegments = 20;
     float _mainRadius = 2;
     float _tubeRadius = 0.5;
+
 
 
     void addVerticies() {
@@ -81,8 +67,8 @@ public:
     };
 
     void Construct() {
-        mesh.clear();
-        color.clear();
+        verticies.clear();
+        colors.clear();
         triangles.clear();
         verticies.clear();
         normals.clear();
@@ -93,16 +79,16 @@ public:
         debug_normals_colors.clear();
         texture_coordinates.clear();
 
-        std::vector<std::vector<Vector>> rings;
-        for (float theta = 0; theta < 2*M_PI; theta+= 2 * M_PI/sqrt(vertexCount)) {
-            std::vector<Vector> ring;
-            for (float phi = 0; phi < 2 * M_PI; phi+= 2 * M_PI / sqrt(vertexCount)) {
-                ring.push_back(Vector((radius + inner_radius * cos(theta)) * cos(phi), (radius + inner_radius * cos(theta)) * sin(phi), inner_radius * sin(theta)));
+        std::vector<std::vector<glm::vec4>> rings;
+        for (float theta = 0; theta < 2 * M_PI; theta += 2 * M_PI / sqrt(vertexCount)) {
+            std::vector<glm::vec4> ring;
+            for (float phi = 0; phi < 2 * M_PI; phi += 2 * M_PI / sqrt(vertexCount)) {
+                ring.push_back(glm::vec4((radius + inner_radius * cos(theta)) * cos(phi), (radius + inner_radius * cos(theta)) * sin(phi), inner_radius * sin(theta), 1.0));
             }
             rings.push_back(ring);
         }
         for (float phi = 0; phi < 2 * M_PI; phi += 2 * M_PI / sqrt(vertexCount)) {
-            ringCenters.push_back(Vector(radius * cos(phi), radius * sin(phi), 0));
+            ringCenters.push_back(glm::vec4(radius * cos(phi), radius * sin(phi), 0, 1.0));
         }
         for (int i = 0; i < rings.size(); i++) {
             for (int j = 0; j < rings[i].size(); j++) {
@@ -111,108 +97,77 @@ public:
                 auto t = Triangle();
                 t.x = rings[i][j];
                 smooth_normals.push_back(rings[i][j] - ringCenters[j]);
-                addDebugNormal(rings[i][j], (rings[i][j] - ringCenters[j]).normalized());
+                addDebugNormal(rings[i][j], glm::normalize(rings[i][j] - ringCenters[j]));
                 t.y = rings[i][modulo_j];
                 smooth_normals.push_back(rings[i][modulo_j] - ringCenters[modulo_j]);
-                addDebugNormal(rings[i][modulo_j], (rings[i][modulo_j] - ringCenters[modulo_j]).normalized());
+                addDebugNormal(rings[i][modulo_j], glm::normalize(rings[i][modulo_j] - ringCenters[modulo_j]));
                 t.z = rings[modulo_i][j];
                 smooth_normals.push_back(rings[modulo_i][j] - ringCenters[j]);
-                addDebugNormal(rings[modulo_i][j], (rings[modulo_i][j] - ringCenters[j]).normalized());
+                addDebugNormal(rings[modulo_i][j], glm::normalize(rings[modulo_i][j] - ringCenters[j]));
                 triangles.push_back(t);
 
                 auto t2 = Triangle();
                 t2.x = rings[modulo_i][modulo_j];
                 smooth_normals.push_back(rings[modulo_i][modulo_j] - ringCenters[modulo_j]);
-                addDebugNormal(rings[modulo_i][modulo_j], (rings[modulo_i][modulo_j] - ringCenters[modulo_j]).normalized());
+                addDebugNormal(rings[modulo_i][modulo_j], glm::normalize(rings[modulo_i][modulo_j] - ringCenters[modulo_j]));
                 t2.y = rings[modulo_i][j];
                 smooth_normals.push_back(rings[modulo_i][j] - ringCenters[j]);
-                addDebugNormal(rings[modulo_i][j], (rings[modulo_i][j] - ringCenters[j]).normalized());
+                addDebugNormal(rings[modulo_i][j], glm::normalize(rings[modulo_i][j] - ringCenters[j]));
                 t2.z = rings[i][modulo_j];
                 smooth_normals.push_back(rings[i][modulo_j] - ringCenters[modulo_j]);
-                addDebugNormal(rings[i][modulo_j], (rings[i][modulo_j] - ringCenters[modulo_j]).normalized());
+                addDebugNormal(rings[i][modulo_j], glm::normalize(rings[i][modulo_j] - ringCenters[modulo_j]));
 
                 triangles.push_back(t2);
             }
         }
 
-        
-
         for (int i = 0; i < triangles.size(); i++) {
-           
-            mesh.push_back(triangles[i].x.x);
-            mesh.push_back(triangles[i].x.y);
-            mesh.push_back(triangles[i].x.z);
-            mesh.push_back(1.0);
 
-            color.push_back(1.0);
-            color.push_back(0.0);
-            color.push_back(0.0);
-            color.push_back(1.0);
-            
-            mesh.push_back(triangles[i].y.x);
-            mesh.push_back(triangles[i].y.y);
-            mesh.push_back(triangles[i].y.z);
-            mesh.push_back(1.0);
-
-            color.push_back(1.0);
-            color.push_back(0.0);
-            color.push_back(0.0);
-            color.push_back(1.0);
-
-            mesh.push_back(triangles[i].z.x);
-            mesh.push_back(triangles[i].z.y);
-            mesh.push_back(triangles[i].z.z);
-            mesh.push_back(1.0);
-
-            color.push_back(1.0);
-            color.push_back(0.0);
-            color.push_back(0.0);
-            color.push_back(1.0);
-
-            Vector normal = calculateNormal(triangles[i].x, triangles[i].y, triangles[i].z);
             verticies.push_back(triangles[i].x);
+
+            colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+
             verticies.push_back(triangles[i].y);
+
+            colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+
             verticies.push_back(triangles[i].z);
+
+            colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+
+            glm::vec4 normal = calculateNormal(triangles[i].x, triangles[i].y, triangles[i].z);
             flat_normals.push_back(normal);
             flat_normals.push_back(normal);
             flat_normals.push_back(normal);
-           
+
+
         }
         if (smooth_shading == true) {
             for (int i = 0; i < smooth_normals.size(); i++) {
-                
-                    normals.push_back(smooth_normals[i].x);
-                    normals.push_back(smooth_normals[i].y);
-                    normals.push_back(smooth_normals[i].z);
-                    normals.push_back(1.0);
-                
+                normals.push_back(smooth_normals[i]);
             }
-            
+
         }
         else {
             debug_normals.clear();
             debug_normals_colors.clear();
             for (int i = 0; i < flat_normals.size(); i++) {
-                    
-                    addDebugNormal(verticies[i], flat_normals[i].normalized());
 
-                    normals.push_back(flat_normals[i].x);
-                    normals.push_back(flat_normals[i].y);
-                    normals.push_back(flat_normals[i].z);
-                    normals.push_back(1.0);
-                
+                addDebugNormal(verticies[i], glm::normalize(flat_normals[i]));
+
+                normals.push_back(flat_normals[i]);
+
+
             }
         }
-        for (int i = 0; i < mesh.size(); i++) {
-            glm::vec2 temp;
-            temp.x = 0;
-            temp.y = 1;
-            texture_coordinates.push_back(temp);
+        
+        for (int i = 0; i < verticies.size(); i++) {
+            texture_coordinates.push_back(glm::vec2(verticies[i].x / 2, verticies[i].y / 2));
         }
     }
-    
+
     Torus() {
-        set_texture("textures/sam.jpg");
+        set_texture("stb/pav_food.jpg");
         Construct();
     }
 };

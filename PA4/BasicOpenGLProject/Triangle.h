@@ -1,19 +1,18 @@
 #pragma once
-#include "Vector.h"
 
 class Triangle {
 public:
-    Vector x;
-    Vector y;
-    Vector z;
+    glm::vec4 x;
+    glm::vec4 y;
+    glm::vec4 z;
 
     Triangle() {
-        x = Vector();
-        y = Vector();
-        z = Vector();
+        x = glm::vec4();
+        y = glm::vec4();
+        z = glm::vec4();
     }
 
-    Triangle(Vector _x, Vector _y, Vector _z) {
+    Triangle(glm::vec4 _x, glm::vec4 _y, glm::vec4 _z) {
         x = _x;
         y = _y;
         z = _z;
