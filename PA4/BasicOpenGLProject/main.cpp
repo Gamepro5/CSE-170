@@ -414,6 +414,7 @@ public:
             std::vector<glm::vec4> ring;
             for (float phi = 0; phi < 2 * M_PI; phi += 2 * M_PI / sqrt(vertexCount)) {
                 ring.push_back(glm::vec4((radius + inner_radius * cos(theta)) * cos(phi), (radius + inner_radius * cos(theta)) * sin(phi), inner_radius * sin(theta), 1.0));
+                
             }
             rings.push_back(ring);
         }
@@ -422,6 +423,7 @@ public:
         }
         for (int i = 0; i < rings.size(); i++) {
             for (int j = 0; j < rings[i].size(); j++) {
+                
                 int modulo_i = (i + 1) % rings.size();
                 int modulo_j = (j + 1) % rings[i].size();
                 auto t = Triangle();
@@ -454,6 +456,7 @@ public:
         for (int i = 0; i < triangles.size(); i++) {
 
             verticies.push_back(triangles[i].x);
+            
 
             colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
 
@@ -490,10 +493,12 @@ public:
 
             }
         }
-
+        /* my favorite way*/
         for (int i = 0; i < verticies.size(); i++) {
-            texture_coordinates.push_back(glm::vec2(verticies[i].x / 2, verticies[i].y / 2));
+            texture_coordinates.push_back(glm::vec2(verticies[i].x/(2*radius), verticies[i].y/(2*radius)));
+            std::cout << texture_coordinates[i].x << " " << texture_coordinates[i].y << std::endl;
         }
+       
     }
 
     Torus() {

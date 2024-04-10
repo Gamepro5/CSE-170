@@ -1,13 +1,13 @@
 ﻿  main.cpp
 C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(39,17): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(84,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(300,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(308,57): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(378,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(382,1): warning C4305: '-=': truncation from 'double' to 'float'
-C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(386,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(390,1): warning C4305: '-=': truncation from 'double' to 'float'
-C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(407,67): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(409,65): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(414,61): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(307,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(315,57): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(385,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(389,1): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(393,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(397,1): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(413,67): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(415,65): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\gamep\Documents\GitHub\CSE-170\PA4\BasicOpenGLProject\main.cpp(421,61): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
   BasicOpenGLProject.vcxproj -> C:\Users\gamep\Documents\GitHub\CSE-170\PA4\x64\Debug\OpenGLProject.exe
